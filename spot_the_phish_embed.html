@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Spot the Phish — Training Game</title>
+  <style>
+    body {margin:0;font-family:Arial, sans-serif;background:#f8fafc;color:#0f172a;padding:20px;}
+    h1 {margin:0;font-size:2rem;}
+    .subtitle {color:#475569;margin-bottom:20px;}
+    .card {background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:18px;margin-top:16px;box-shadow:0 1px 4px rgba(15,23,42,.06);}
+    .row {display:grid;grid-template-columns:120px 1fr;gap:10px;padding:10px 0;border-bottom:1px dashed #e2e8f0;}
+    .row:last-child {border-bottom:none;}
+    .label {font-size:.8rem;color:#64748b;text-transform:uppercase;letter-spacing:.04em;}
+    .value {font-size:1rem;white-space:pre-wrap;}
+    .mono {font-family:ui-monospace, monospace;}
+    .buttons {display:flex;gap:10px;margin:14px 0;}
+    .btn {padding:10px 14px;border-radius:12px;border:1px solid #cbd5e1;background:#fff;color:#0f172a;cursor:pointer;font-weight:600;}
+    .btn:hover {background:#f1f5f9;}
+    .btn:disabled {opacity:.6;cursor:not-allowed;}
+    .primary {background:#0f172a;color:#fff;border-color:#0f172a;}
+    .feedback {margin-top:10px;padding:12px 14px;border-radius:12px;font-size:.95rem;}
+    .ok {background:#ecfdf5;color:#065f46;border:1px solid #a7f3d0;}
+    .bad {background:#fef2f2;color:#991b1b;border:1px solid #fecaca;}
+    .footer {display:flex;justify-content:space-between;align-items:center;margin-top:12px;color:#475569;}
+    .nav {display:flex;gap:10px;justify-content:center;margin-top:16px;}
+  </style>
+</head>
+<body>
+  <h1>Spot the Phish</h1>
+  <p class="subtitle">Training simulation — do not forward externally.</p>
+  <div id="status">Loading emails…</div>
+
+  <section id="card" class="card" style="display:none;">
+    <div class="row"><div class="label">From</div><div id="from" class="mono value"></div></div>
+    <div class="row"><div class="label">Subject</div><div id="subject" class="value"></div></div>
+    <div class="row"><div class="label">Body</div><div id="body" class="value"></div></div>
+    <div id="linksrow" class="row" style="display:none;">
+      <div class="label">Links</div><div id="links" class="value"></div>
+    </div>
+    <div class="buttons">
+      <button id="btnPhish" class="btn">Phish</button>
+      <button id="btnLegit" class="btn">Legit</button>
+    </div>
+    <div id="feedback" class="feedback" style="display:none;"></div>
+  </section>
+
+  <div class="footer">
+    <div id="progress">Question 0 / 0</div>
+    <div id="score">Score: 0</div>
+  </div>
+
+  <div class="nav">
+    <button id="btnNext" class="btn primary" disabled>Next →</button>
+    <button id="btnRestart" class="btn" style="display:none;">Restart</button>
+  </div>
+
+  <script>
+    const emails = [{"id": 1, "from": "support@zоpa.com", "subject": "Urgent: Verify Your Zopa Account Login", "body": "We detected unusual login activity on your Zopa account...", "links": ["https://zоpa.com-login-verification.secure-auth.net"], "isPhish": true, "explanation": "Homoglyph domain used (Cyrillic 'о'), urgency, fake login link."}, {"id": 2, "from": "support@zopa.com", "subject": "Fixed Pot Transfer – Customer Support Response", "body": "Thank you for reaching out. Your funds are in a Fixed Pot...", "links": [], "isPhish": false, "explanation": "Legitimate response from official Zopa support domain."}];
+
+    const status = document.getElementById('status');
+    const card = document.getElementById('card');
+    const elFrom = document.getElementById('from');
+    const elSubject = document.getElementById('subject');
+    const elBody = document.getElementById('body');
+    const elLinksRow = document.getElementById('linksrow');
+    const elLinks = document.getElementById('links');
+    const btnPhish = document.getElementById('btnPhish');
+    const btnLegit = document.getElementById('btnLegit');
+    const feedback = document.getElementById('feedback');
+    const progress = document.getElementById('progress');
+    const scoreBox = document.getElementById('score');
+    const btnNext = document.getElementById('btnNext');
+    const btnRestart = document.getElementById('btnRestart');
+
+    let i = 0;
+    let score = 0;
+    let answered = false;
+
+    function shuffle(arr){ for(let j=arr.length-1;j>0;j--){ const k=Math.floor(Math.random()*(j+1)); [arr[j],arr[k]]=[arr[k],arr[j]];} return arr; }
+    function show(el){ el.style.display=''; }
+    function hide(el){ el.style.display='none'; }
+
+    function render(){
+      const e = emails[i];
+      elFrom.textContent = e.from || '';
+      elSubject.textContent = e.subject || '';
+      elBody.textContent = (e.body || '').slice(0, 1000);
+      if (Array.isArray(e.links) && e.links.length){
+        elLinks.innerHTML = e.links.map(l => '<span class="mono">'+l+'</span>').join('<br>');
+        show(elLinksRow);
+      } else hide(elLinksRow);
+      progress.textContent = `Question ${i+1} / ${emails.length}`;
+      scoreBox.textContent = `Score: ${score}`;
+      hide(feedback);
+      btnNext.disabled = true;
+      answered = false;
+    }
+
+    function onGuess(isPhish){
+      if (answered) return;
+      const correct = !!emails[i].isPhish === !!isPhish;
+      answered = true;
+      btnNext.disabled = false;
+      if (correct) score += 1;
+      feedback.textContent = (correct ? '✅ Correct.' : '❌ Incorrect.')+ ' This email is ' + (emails[i].isPhish ? 'Phish' : 'Legit') + '. ' + (emails[i].explanation||'');
+      feedback.className = 'feedback ' + (correct ? 'ok' : 'bad');
+      show(feedback);
+    }
+
+    function next(){
+      if (i < emails.length - 1){ i+=1; render(); }
+      else { status.textContent = `Finished! You scored ${score} / ${emails.length}.`; show(status); hide(card); hide(btnNext); show(btnRestart); }
+    }
+
+    function restart(){
+      score=0;i=0;shuffle(emails);show(card);show(btnNext);hide(btnRestart);status.textContent='';render();
+    }
+
+    btnPhish.addEventListener('click', ()=>onGuess(true));
+    btnLegit.addEventListener('click', ()=>onGuess(false));
+    btnNext.addEventListener('click', next);
+    btnRestart.addEventListener('click', restart);
+
+    if (emails.length){ shuffle(emails); show(card); render(); status.textContent=''; }
+    else status.textContent='No labeled emails found.';
+  </script>
+</body>
+</html>
