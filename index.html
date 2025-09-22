@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spot the Differences — Email Edition</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <h1>Spot the Differences</h1>
+  <div class="controls">
+    <div class="stat">Found: <span id="found">0</span>/<span id="total">0</span></div>
+    <div class="stat">Mistakes: <span id="mistakes">0</span></div>
+    <div class="stat">Time: <span id="timer">00:00</span></div>
+    <div class="progress"><span id="bar"></span></div>
+    <button id="reveal">Reveal 1</button>
+    <button id="reset">Reset</button>
+  </div>
+</header>
+<main>
+  <div class="board" id="board" aria-label="Spot the differences board">
+    <div class="half left"><img src="left.png" alt="" class="img"></div>
+    <div class="divider"></div>
+    <div class="half right"><img src="right.png" alt="" class="img"></div>
+    <canvas id="diff" class="overlay" width="1536" height="1024"></canvas>
+    <div id="marks"></div>
+  </div>
+  <div class="legend">Click anywhere you suspect a difference. Correct hits are circled in green.</div>
+</main>
+<footer>Tip: zoom your browser if you want a closer look.</footer>
+<script src="spot.js"></script>
+</body>
+</html>

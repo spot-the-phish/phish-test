@@ -1,0 +1,24 @@
+
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial,sans-serif;background:#0b1220;color:#e6edf3}
+header{max-width:1600px;margin:20px auto 10px;padding:0 16px;display:flex;justify-content:space-between;align-items:end}
+h1{margin:0;font-size:22px;font-weight:700;color:#e6edf3}
+.meta{font-size:12px;color:#9fb1cc}
+main{max-width:1600px;margin:0 auto;padding:0 16px 28px}
+.board{position:relative;width:1536px;height:1024px;margin:0 auto;border-radius:16px;overflow:hidden;background:#111827;box-shadow:0 8px 30px rgba(0,0,0,.5);border:1px solid #1f2937}
+.half{position:absolute;top:0;width:768px;height:1024px}
+.left{left:0}.right{left:768px}
+.img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.divider{position:absolute;left:768px;top:0;width:1px;height:100%;background:#334155}
+.overlay{position:absolute;inset:0;pointer-events:none}
+.hit{position:absolute;border:2px solid #22c55e;border-radius:999px;box-shadow:0 0 0 3px rgba(34,197,94,.25);pointer-events:none}
+.miss{position:absolute;border:2px solid #ef4444;border-radius:999px;opacity:.6;animation:fade .5s ease-out forwards;pointer-events:none}
+@keyframes fade{to{opacity:0}}
+.controls{display:flex;gap:12px;align-items:center}
+button{background:#1f2937;border:1px solid #374151;color:#e6edf3;border-radius:10px;padding:8px 12px;font-weight:600;cursor:pointer}
+button:hover{background:#243041}
+.stat{background:#0b1220;border:1px solid #223048;border-radius:10px;padding:6px 10px}
+.progress{height:8px;background:#1f2937;border-radius:999px;overflow:hidden;width:260px}
+.progress>span{display:block;height:100%;background:#22c55e;width:0%}
+.legend{font-size:12px;color:#9fb1cc;margin-top:8px;text-align:center}
+footer{max-width:1600px;margin:8px auto 0;padding:0 16px;color:#9fb1cc;font-size:12px;text-align:center}
