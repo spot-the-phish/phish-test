@@ -1,0 +1,24 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spot the Phish — Email Game</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <h1>Spot the Phish</h1>
+  <p>Two emails are shown below. Click the one you believe is the phishing attempt.</p>
+</header>
+<main>
+  <div class="card" id="leftCard"><img src="left.png" alt="Email A"></div>
+  <div class="card" id="rightCard"><img src="right.png" alt="Email B"></div>
+</main>
+<div class="feedback" id="feedback"></div>
+<div style="text-align:center;"><button id="reset" style="display:none;">Play Again</button></div>
+<footer>Training simulation — do not forward externally.</footer>
+<script src="phish.js"></script>
+</body>
+</html>
